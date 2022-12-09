@@ -13,15 +13,24 @@ const styles = StyleSheet.create({
     flatListItem: {
         flex: 1,
         flexDirection: 'row',
+        justifyContent: "center",
+        alignItems: "center",
+        alignContent: "center",
         backgroundColor: colors.listBG,
     },
     flatListButton: {
         flex: 5,
-        justifyContent: 'flex-start',
         paddingHorizontal: metrics.flatListButtonPadH,
         paddingVertical: metrics.flatListButtonPadV,
         marginVertical: metrics.flatListButtonMarV,
     },
+    produtoDetails: {
+        flex: 1,
+        flexDirection: "row",
+        // marginTop: 3,
+    },
+    produtoQtd: {flex: 1},
+    produtoValor: {flex: 6, },
     flatListButtonEdit: {
         paddingHorizontal: metrics.flatListButtonEditPadH,
         paddingVertical: metrics.flatListButtonEditPadV,
@@ -31,9 +40,10 @@ const styles = StyleSheet.create({
         paddingVertical: metrics.flatListButtonDelPadV,
     },
     flatListText: {
+        flex: 1,
+        fontWeight: "700",
         fontFamily: fonts.listTxt,
         color: '#333',
-        flex: 1,
         fontSize: metrics.flatListText,
     },
     delIcon: {

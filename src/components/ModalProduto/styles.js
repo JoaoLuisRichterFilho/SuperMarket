@@ -42,13 +42,19 @@ const styles = StyleSheet.create({
     modalText: {
         fontSize: 20,
         fontWeight: '700',
-        marginBottom: 15,
+        marginBottom: 10,
         textAlign: "left"
+    },
+    produtoNome: {
+      fontSize: 18,
+      borderBottomColor: "#000",
+      borderBottomWidth: 2,
+      marginBottom:10,
     },
     inputValor: {
         // flex: 1,
         fontSize: 16,
-        borderBottomWidth: 2,
+        borderBottomWidth: 1,
         marginVertical:10,
     },
     viewQTD: {
@@ -99,7 +105,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         right: 0,
-        width: 50,
+        width: 80,
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',

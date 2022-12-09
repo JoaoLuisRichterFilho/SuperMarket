@@ -8,9 +8,9 @@ import SelectDropdown from 'react-native-select-dropdown'
 
 import styles from './styles'
 
-const ModalComprar = ( props ) => {
+const ModalProduto = ( props ) => {
 
-    const [text, setText] = useState(props.produtoName);
+    const [nome, setProdutoName] = useState(props.produtoName);
     const [id, setId] = useState(props.produtoId);
     const [valor, setValor] = useState(props.produtoValor);
     const [qtd, setQtd] = useState(props.produtoQtd);
@@ -26,6 +26,8 @@ const ModalComprar = ( props ) => {
 
     useEffect(() => {
         props.setProdutoName(props.produtoName)
+        setProdutoName(props.produtoName)
+        // console.log(props.produtoName)
         // setText( props.produtoName);
     }, [props.produtoName])
 
@@ -44,28 +46,32 @@ const ModalComprar = ( props ) => {
         setStatus( props.produtoStatus);
     }, [props.produtoStatus])
 
-    function closeModal() {
+    function clearModal(id, valor) {
         props.setProdutoId(null)
         setId(null);
 
         props.setProdutoName(null)
-        setText(null);
+        setProdutoName(null);
 
         props.setProdutoValor(null)
         setValor(null);
 
         props.setProdutoQtd(null)
-        setQtd(null);
+        setQtd(1);
 
         props.setProdutoStatus(null)
         setStatus(null);
 
-        props.closeModalComprar()
+        //Id setado == comprando produto -> fecha modal pra comprar próximo item
+        if(id || valor) props.closeModalProduto()
     }
 
-    function comprar(id, val, qtd, status) {
-        props.comprarProduto(id, val, qtd, status)
-        closeModal()
+    function comprar(id, nome, val, qtd, status) {
+        if(nome) //se não tiver nome, o produto não pode ser salvo
+        { 
+            props.comprarProduto(id, nome, val, qtd, status)
+            clearModal(id, val)
+        }
     }
 
     const quantidades = [
@@ -122,7 +128,7 @@ const ModalComprar = ( props ) => {
             }}
         />
         
-    // console.log(statusProd)
+    // console.log(props.modalVisible)
     
     return (
         <Modal style={styles.modal}
@@ -138,18 +144,22 @@ const ModalComprar = ( props ) => {
                 <View style={styles.modalView}>
                     <TouchableOpacity 
                         style={styles.btnCloseModal}
-                        onPress={() => props.closeModalComprar(!props.modalVisible)}
+                        onPress={() => props.closeModalProduto(!props.modalVisible)}
                     >
                         <Ionicons name='close' color={'#fff'} size={20}/>
                     </TouchableOpacity>
                     <View style={styles.viewNewProduto}>
                         <View style={styles.modalHeader}>
                             <Text style={styles.modalText}>
-                                {props.produtoName}
+                                Item
                             </Text>
                         </View>
                         <View style={styles.groupComprar}>
                             <View style={styles.subGroupComprar1}>
+                                <TextInput style={styles.produtoNome} 
+                                    value={nome}
+                                    onChangeText={setProdutoName}
+                                />
                                 <CurrencyInput
                                     nativeID='inputValor' 
                                     placeholder='Valor...'
@@ -197,7 +207,7 @@ const ModalComprar = ( props ) => {
                     </View>
                     <TouchableOpacity 
                         style={styles.confirmNewProduto}
-                        onPress={() => comprar(props.produtoId, valor, qtd, statusProd)}
+                        onPress={() => comprar(props.produtoId, nome, valor, qtd, statusProd)}
                     >
                         <Ionicons name='checkmark' color={'#fff'} size={20}/>
                     </TouchableOpacity>
@@ -208,4 +218,4 @@ const ModalComprar = ( props ) => {
     );
 }
 
-export default ModalComprar;
+export default ModalProduto;

@@ -13,8 +13,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import styles from './styles'
-import ModalAddProduto from '../../components/ModalAddProduto';
-import ModalComprar from '../../components/ModalComprar';
+// import ModalAddProduto from '../../components/ModalAddProduto';
+import ModalProduto from '../../components/ModalProduto';
 import FilterDataInput from '../../components/FilterDataInput';
 
 import FlatListDefault from '../../components/FlatListDefault';
@@ -24,8 +24,7 @@ import AppVersion from '../../components/AppVersion';
 export function Produtos({ route, navigation }) {
 
     //##############################################################
-    const [modalEditVisible, setModalCadVisible] = useState(false);
-    const [modalComprarVisible, setModalComprarVisible] = useState(false);
+    const [modalProdutoVisible, setModalProdutoVisible] = useState(false);
     const [inputSearchVisible, setInputSearchVisible] = useState(false);
     const [bottomVisible, setBottomVisible] = useState(true);
 
@@ -117,17 +116,21 @@ export function Produtos({ route, navigation }) {
       }
     }
 
-    function newProduto ( newVal ) {
+    function newProduto ( nome, valor, qtd, status ) {
 
-      console.log(newVal)
+      console.log(nome)
 
       let tempProdutos = [...produtosAux]
       let id = urid(8, 'num')
       console.log("id: "+id)
       let addVal = {
         "id": id,
-        "title": newVal
+        "title": nome,
+        "produtoValor": valor,
+        "produtoQtd": qtd,
+        "produtoStatus": status
       }
+      // console.log(removeEspecialChar(nome))
       console.log(addVal);
       // console.log(produtos)
       // console.log(tempProdutos)
@@ -137,31 +140,15 @@ export function Produtos({ route, navigation }) {
         setProdutosAux(tempProdutos)
         storeData(tempProdutos) // armazena o novo produto na base
         setProdutoId(null) 
-        setProdutoName(null)
+        // setProdutoName(null)
         getTotal(tempProdutos)
       }
 
     }
 
-    function editProduto ( id, newVal ) {
-      
-      let tempProdutos = [...produtosAux]
-
-      tempProdutos.forEach( (element, key) => {  //percorre o novo produto
-      if(element.id === id) { // checa se o current id for igual ao parametro
-          tempProdutos[key].title = newVal;
-          setProdutos(tempProdutos) // seta o novo produto pro state
-          setProdutosAux(tempProdutos)
-          storeData(tempProdutos) // armazena o novo produto na base
-          setProdutoId(null) 
-          setProdutoName(null)
-        }
-      })
-
-    }
-
     function delProduto ( id ) {
       let tempProdutos = [...produtosAux] //transpoem o produto pra variável
+      let deleted = false
       tempProdutos.forEach( (element, key) => {  //percorre o novo produto
         // const index = array.indexOf(element);
         if(element.id === id) { // checa se o current id for igual ao parametro
@@ -169,17 +156,26 @@ export function Produtos({ route, navigation }) {
           // console.log(produtosAux.splice(key, 1))
           if(produtosAux.splice(key, 1))
           {
-            setProdutos(produtosAux) // seta o novo produto pro state
-            setProdutosAux(produtosAux)
-            storeData(produtosAux) // armazena o novo produto na base
-            getTotal(produtosAux)
+            deleted = true
           }
         }
       })
+
+      if(deleted) {
+        setProdutos(produtosAux) // seta o novo produto pro state
+        setProdutosAux(produtosAux)
+        storeData(produtosAux) // armazena o novo produto na base
+        getTotal(produtosAux)
+      }
       
     }
 
-    function comprarProduto ( id, valor, qtd, status ) {
+    function comprarProduto ( id, nome, valor, qtd, status ) {
+
+        if(!id){
+          newProduto(nome, valor, qtd, status)
+          return true
+        }
 
         let tempProdutos = [...produtosAux]
         
@@ -218,20 +214,15 @@ export function Produtos({ route, navigation }) {
       setProdutoStatus(stat)
     }
 
-    function openModalComprar(id, title, valor, qtd, stat) {
+    function openModalProduto(id, title, valor, qtd, stat) {
       setProdutoState(id, title, null, null, false)
       setProdutoState(id, title, valor, qtd, stat)
-      setModalComprarVisible(true)
+      setModalProdutoVisible(true)
+      // console.log('entrou aqui')
     }
 
-    function closeModalComprar() {
-      setModalComprarVisible(false)
-    }
-
-    function openModalCad(id, title) {
-      setProdutoState(id, title)
-      console.log(title)
-      setModalCadVisible(true)
+    function closeModalProduto() {
+      setModalProdutoVisible(false)
     }
 
     // function clearMoney(valor) {
@@ -263,6 +254,19 @@ export function Produtos({ route, navigation }) {
         }
       }
 
+    }
+
+    function removeEspecialChar (especialChar){
+      especialChar = especialChar.replace('/[áàãâä]/ui', 'a');
+      especialChar = especialChar.replace('/[éèêë]/ui', 'e');
+      especialChar = especialChar.replace('/[íìîï]/ui', 'i');
+      especialChar = especialChar.replace('/[óòõôö]/ui', 'o');
+      especialChar = especialChar.replace('/[úùûü]/ui', 'u');
+      especialChar = especialChar.replace('/[ç]/ui', 'c');
+      especialChar = especialChar.replace('/[^a-z0-9]/i', '_');
+      especialChar = especialChar.replace('/_+/', '_'); //
+      especialChar = especialChar.replace(/ /g, '_'); //
+      return especialChar;
     }
 
     function getFilteredData(filter) {
@@ -409,8 +413,7 @@ export function Produtos({ route, navigation }) {
             <View style={styles.body}>
               <View style={styles.viewFlatList}>
                 <FlatListDefault 
-                  openModalComprar={openModalComprar}
-                  openModalCad={openModalCad}
+                  openModalProduto={openModalProduto}
                   setItemId={setProdutoId} 
                   setItemName={setProdutoName}
                   setItemValor={setProdutoValor}
@@ -426,7 +429,7 @@ export function Produtos({ route, navigation }) {
                   style={styles.viewBottom} >
                   <View style={styles.viewProdutosTotal}>
                     <Text style={styles.textProdutosTotal}>
-                      Valor:
+                      Total comprado:
                     </Text>
                     <Text style={styles.textProdutosTotalValor}>
                       {(produtosTotal?produtosTotal:"R$ 0,00")}
@@ -434,7 +437,7 @@ export function Produtos({ route, navigation }) {
                   </View>
                   <View style={styles.viewProdutosQtd}>
                     <Text style={styles.textProdutosQtd}>
-                      Qtd:
+                      Qtd Itens:
                     </Text>
                     <Text style={styles.textProdutosQtdValor}>
                       {produtosQtd}
@@ -443,7 +446,7 @@ export function Produtos({ route, navigation }) {
                   <View style={styles.viewBtnAdd}>
                     <TouchableOpacity 
                       style={styles.btnNewProduto}
-                      onPress={() => openModalCad(null, null)}
+                      onPress={() => openModalProduto(null, null, null, 1, null)}
                     >
                       <Text>
                         <FeatherIcons color={'#fff'} size={40} name='plus' style={styles.btnIconNewProduto}/>
@@ -455,7 +458,7 @@ export function Produtos({ route, navigation }) {
                 : null
               }  
             </View>
-            <ModalAddProduto
+            {/* <ModalAddProduto
               saveProduto={newProduto}
               produtoId={produtoId} 
               produtoName={produtoName} 
@@ -464,8 +467,8 @@ export function Produtos({ route, navigation }) {
               editProduto={editProduto}
               setCadVisible={setModalCadVisible} 
               modalVisible={modalEditVisible} 
-            />
-            <ModalComprar
+            /> */}
+            <ModalProduto
               comprarProduto={comprarProduto}
 
               produtoId={produtoId} 
@@ -483,9 +486,9 @@ export function Produtos({ route, navigation }) {
               produtoStatus={produtoStatus}
               setProdutoStatus = {setProdutoStatus}
               
-              setVisible={openModalComprar} 
-              closeModalComprar={closeModalComprar}
-              modalVisible={modalComprarVisible}
+              setVisible={openModalProduto} 
+              closeModalProduto={closeModalProduto}
+              modalVisible={modalProdutoVisible}
 
             />
         </View>

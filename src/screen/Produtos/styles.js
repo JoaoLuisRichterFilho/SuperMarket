@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     },
     viewFlatList: {
         flex: 4,
+        // backgroundColor: 'red'
     },
     viewBottom: {
         flex: 1,
