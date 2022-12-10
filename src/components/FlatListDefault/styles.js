@@ -24,13 +24,14 @@ const styles = StyleSheet.create({
         paddingVertical: metrics.flatListButtonPadV,
         marginVertical: metrics.flatListButtonMarV,
     },
-    produtoDetails: {
+    infosExtras: {
         flex: 1,
         flexDirection: "row",
         // marginTop: 3,
     },
     produtoQtd: {flex: 1},
-    produtoValor: {flex: 6, },
+    datetime: {flex: 1},
+    produtoValor: {flex: 6},
     flatListButtonEdit: {
         paddingHorizontal: metrics.flatListButtonEditPadH,
         paddingVertical: metrics.flatListButtonEditPadV,

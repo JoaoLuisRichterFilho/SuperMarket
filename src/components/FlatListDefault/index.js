@@ -23,7 +23,7 @@ const FlatListDefault = ( props ) => {
             <TouchableOpacity onPress={(props.openModalProduto) ? () => props.openModalProduto(item.id, item.title, item.produtoValor, item.produtoQtd, item.produtoStatus) : onPress} style={styles.flatListButton}>
               <Text style={[styles.flatListText, ( item.produtoStatus ? styles.textDashed : null)]}>{item.title}</Text>
               {item.produtoValor || item.produtoQtd ?  
-                <View style={styles.produtoDetails}>
+                <View style={styles.infosExtras}>
                   {item.produtoQtd ?
                     <View style={styles.produtoQtd}>
                       <Text style={{fontSize: 15, fontWeight: "700", color: "#595959"}}>{item.produtoQtd}x</Text>
@@ -34,6 +34,14 @@ const FlatListDefault = ( props ) => {
                       <Text style={{fontSize: 15, fontWeight: "700", color: "#595959"}}>{formatCurrency({ amount: item.produtoValor.toFixed(2), code: "BRL" })[0]}</Text>
                     </View>
                     : null}
+                </View>
+              : null}
+
+              {item.datetime ?  
+                <View style={styles.infosExtras}>
+                    <View style={styles.datetime}>
+                      <Text style={{fontSize: 15, fontWeight: "700", color: "#595959"}}>{item.datetime}</Text>
+                    </View>  
                 </View>
               : null}
             </TouchableOpacity>

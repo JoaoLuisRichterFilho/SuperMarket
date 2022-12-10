@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         textAlign: "left"
     },
     produtoNome: {
-      fontSize: 18,
+      fontSize: 16,
       borderBottomColor: "#000",
       borderBottomWidth: 2,
       marginBottom:10,

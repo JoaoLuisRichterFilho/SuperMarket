@@ -158,6 +158,7 @@ const ModalProduto = ( props ) => {
                             <View style={styles.subGroupComprar1}>
                                 <TextInput style={styles.produtoNome} 
                                     value={nome}
+                                    placeholder='Produto...'
                                     onChangeText={setProdutoName}
                                 />
                                 <CurrencyInput

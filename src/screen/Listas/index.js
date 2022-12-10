@@ -2,6 +2,7 @@ import React, {useState, useEffect } from 'react';
 import { Alert, Text, Image, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 
 import FeatherIcons from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -62,14 +63,33 @@ export function Listas({ navigation }) {
       })
     }
 
+
+    function getCurrentDateTime(format = "pt", time = false, seconds = false){
+
+      let sec = ''
+
+      if(time && seconds)
+        sec = ':ss'
+
+      if(format == "pt")
+        return moment().utcOffset('-03:00').format('DD/MM/YYYY' + (time ? ' HH:mm'+sec:''))
+      else if(format == 'us') 
+        return moment().utcOffset('-03:00').format('DD/MM/YYYY' + (time ? ' HH:mm'+sec:''))
+
+    }
+
+    // console.log(getCurrentDateTime("pt",true,false));
+
     function newLista ( newVal ) {
       
       let tempListas = [...listas]
       let id = tempListas.length;
+
       console.log("id: "+id)
       let addVal = {
         "id": id,
-        "title": newVal
+        "title": newVal,
+        "datetime": getCurrentDateTime("pt",true,false)
       }
       // console.log(addVal);
       // console.log(listas)
